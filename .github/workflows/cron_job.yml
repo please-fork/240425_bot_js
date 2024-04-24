@@ -1,0 +1,28 @@
+name: daily-monitoring
+on:
+    schedule:
+        - cron: '0 * * * *'
+    workflow_dispatch:
+jobs:
+    monitoring_by_schedule:
+        runs-on: ubuntu-latest
+        permissions:
+          issues: write
+        steps:
+            - name: 저장소 체크아웃
+              uses: actions/checkout@v4
+
+            - name: 노드 셋업
+              uses: actions/setup-node@v4
+              with:
+                node-version: '20.x'
+
+            - name: 의존성 설치
+              run: npm i
+
+            - name: 모니터링 실행
+              env:
+                  currency: ${{ vars.currency }}
+                  bot_token: ${{ secrets.bot_token }}
+              run: node index.js
+            
